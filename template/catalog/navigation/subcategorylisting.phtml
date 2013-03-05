@@ -1,0 +1,430 @@
+<?php
+
+$categoryID = $this->getCurrentCategory();
+
+//$cur_category1 = Mage::getModel('catalog/category')->load($categoryID->getId());
+
+//$_categories=$this->getChildCategories($categoryID->getId());
+
+
+$cur_category1 = Mage::getModel('catalog/category')->load(2);
+
+$_categories=$this->getChildCategories(2);
+
+$aSelectCat=array();
+
+if(!empty($_REQUEST['selectcatlist'])){
+
+	$aSelectCat=explode(",",$_REQUEST['selectcatlist']);
+	
+	//print_r($aSelectCat);
+	
+	$cur_category1 = Mage::getModel('catalog/category')->load($aSelectCat[0]);
+	$_categories = $this->getChildCategories($aSelectCat[0]);
+
+}
+
+?>
+<form action="" method="post" name="frmcat" id="frmcat" >
+
+    <div class="catselection">
+    
+    <div style="display:inline-block">
+		<?php echo "<img src=".$this->getSkinURL("images/selection1.png")." height='60' width='60'>"; ?>
+    </div>
+  					
+            <div id="divcat1" style="display:inline-block">
+                <select name="cat_1" id="cat_1" onchange="setlocation(this.value,'2');">
+                    <option value="">Please Select</option>
+                    <?php
+					$cat = Mage::getModel('catalog/category')->load($aSelectCat[2]);
+		   			$parent = $cat->getParentId();
+                    foreach ($_categories as $_category): 
+                        $cur_category = Mage::getModel('catalog/category')->load($_category->getId());
+						//$subCategory = $aSelectCat[2];
+						//$cur_category = Mage::getModel('catalog/category')->load($_category->getParentId($aSelectCat[2]));
+						//$parentCategory = Mage::getModel('catalog/category')->load($_category->getParentId());
+                    ?>
+                      <?php if($cur_category->getIsActive()): ?>
+                        <option value="<?php echo $cur_category->getId() ?>" <?php echo  (isset($aSelectCat[1]) && $cur_category->getId()== $parent)? "selected='selected'" : ""; ?>> <?php echo $this->htmlEscape($cur_category->getName()); ?></option>
+                        <?php endif; ?>
+                    <?php endforeach; ?> 
+                </select>
+            </div>
+            
+    <div style="display:inline-block">
+	    <?php echo "<img src=".$this->getSkinURL("images/selection2.png")." height='60' width='60'>"; ?>
+    </div>
+            <div id="divcat2" style="display:inline-block">
+                <select name="cat_2" id="cat_2" onchange="setlocation(this.value,'3');setlocation2(this.value);">
+                    <option value="">Please Select</option>
+                    <?php
+                    if(!empty($aSelectCat) && is_array($aSelectCat)){
+                        $cat2_category = Mage::getModel('catalog/category')->load($parent);
+                        $_childcat2=$this->getChildCategories($parent);
+                        foreach ($_childcat2 as $_category): 
+                            $cur_category=Mage::getModel('catalog/category')->load($_category->getId());
+                            if($cur_category->getIsActive()): 
+                    ?>
+                        <option value="<?php echo $cur_category->getId() ?>" <?php echo  (isset($aSelectCat[2]) && $cur_category->getId()==$aSelectCat[2])? "selected='selected'" : ""; ?>> <?php echo $this->htmlEscape($cur_category->getName()); ?></option>
+                    <?php
+                        endif;	
+                     endforeach; 
+                    }
+                    ?>
+                </select>
+            </div>
+            
+    <div style="display:inline-block">
+	    <?php echo "<img src=".$this->getSkinURL("images/selection3.png")." height='60' width='60'>"; ?>
+    </div>
+            <div id="divcat3" style="display:inline-block">
+                <select name="cat_3" id="cat_3" <?php if(!empty($aSelectCat)) { ?> onchange="setlocation1(this.value)" <?php } ?>>
+                    <option value="">Please Select</option>
+                    <?php
+                    if(!empty($aSelectCat) && is_array($aSelectCat)){
+        
+                        $cat2_category = Mage::getModel('catalog/category')->load($aSelectCat[2]);
+        
+                        $_childcat2=$this->getChildCategories($aSelectCat[2]);
+        
+                        foreach ($_childcat2 as $_category): 
+        
+                            $cur_category=Mage::getModel('catalog/category')->load($_category->getId());
+        
+                            if($cur_category->getIsActive()): 
+        
+                    ?>
+                        <option value="<?php echo $cur_category->getId() ?>" <?php echo  (isset($aSelectCat[3]) && $cur_category->getId()==$aSelectCat[3])? "selected='selected'" : ""; ?>> <?php echo $this->htmlEscape($cur_category->getName()); ?></option>
+        
+                    <?php
+                        endif;	
+                     endforeach; 
+                    }
+                    ?>
+                </select>
+            </div>
+            
+            
+<div id="loadingmask" style="display: none;text-align:center;">
+<div class="loader" id="loading-mask-loader"><img src="<?php echo str_replace("index.php/","",$this->getUrl()) ?>skin/adminhtml/default/default/images/ajax-loader-tr.gif" alt="<?php echo $this->__('Loading...') ?>"/><?php echo $this->__('Loading...') ?></div>
+<div id="loading-mask"></div>
+</div>
+    
+    </div>
+    
+    
+
+    
+<div style="text-align:center;">
+<input type="hidden" name="search" id="search" value="1">
+<input type="hidden" name="page" id="page" value="search">
+<input type="hidden" name="selectcatlist" id="selectcatlist" value="<?php echo (!empty($_REQUEST['selectcatlist']))?$_REQUEST['selectcatlist']:''; ?>">
+
+<input type="submit" name="searchbtn" id="searchbtn" value="Search" disabled="disabled"  class="leftcatesearch1">
+
+<!--<button type="button" title="<?php echo $this->__('Search') ?>" id="searchbtn" disabled="disabled" class="button1" name="searchbtn"><span><span><span><?php echo $this->__('Search') ?></span></span></span></button>-->
+
+</div>
+</form>
+
+<script language="javascript">
+
+function setlocation(catid,divid)
+
+{
+	document.getElementById("searchbtn").setAttribute('disabled', true);
+
+	document.getElementById("searchbtn").setAttribute('class','leftcatesearch1');
+
+	var request = new Ajax.Request(
+
+			'<?php echo $this->getUrl("category/category/viewcat") ?>',
+
+           	{
+            	method: 'post',
+
+				parameters: {cid:catid},
+
+				onLoading:function(){ document.getElementById('loadingmask').style.display='block'; },	
+
+				onComplete: function(transport){ 
+
+					document.getElementById('loadingmask').style.display='none'; 
+
+					var jsonResponse=eval('(' + transport.responseText+')');
+
+                	if(jsonResponse.error){
+
+                		alert(jsonResponse.message);
+
+					}
+
+                	if(jsonResponse.parentid != null){
+
+						
+
+						if(document.getElementById('selectcatlist').value.indexOf(jsonResponse.parentid)==-1)
+
+						{
+
+							if(document.getElementById('selectcatlist').value!='')
+
+								document.getElementById('selectcatlist').value+=",";
+
+					
+
+							document.getElementById('selectcatlist').value=document.getElementById('selectcatlist').value+jsonResponse.parentid;
+
+						}	
+
+					}
+
+					var catoptions='';
+
+					document.getElementById("divcat"+divid).innerHTML = "";
+
+					var isOptions=false;
+
+					if(divid == 1)
+
+					{
+
+						catoptions='<select name="cat_'+divid+'" id="cat_'+divid+'" onchange="setlocation(this.value,\''+(parseInt(divid)+1)+'\')"><option value="">Please Select</option>';				
+
+					}
+					else if(divid == 2)
+
+					{
+
+						catoptions='<select name="cat_'+divid+'" id="cat_'+divid+'" onchange="setlocation(this.value,\''+(parseInt(divid)+1)+'\'); setlocation2(this.value);"><option value="">Please Select</option>';				
+
+					}
+					
+				else{
+
+						catoptions='<select name="cat_'+divid+'" id="cat_'+divid+'" onchange="setlocation1(this.value)"><option value="">Please Select</option>';				
+
+					}	
+					if(jsonResponse.collection != null)
+
+					{
+
+						for(var i=0;i<jsonResponse.collection.length;i++){
+
+							catoptions+='<option value="'+jsonResponse.collection[i].id+'">'+jsonResponse.collection[i].name+'</option>';
+
+						}
+
+						isOptions=true;
+
+					}
+
+					catoptions+='</select>';
+
+					if(!isOptions && divid==2){
+						document.getElementById("divcat"+(parseInt(divid)+1)).innerHTML ='<select name="cat_'+(parseInt(divid)+1)+'" id="cat_'+(parseInt(divid)+1)+'" onchange="setlocation1(this.value)"><option value="">Please Select</option></select>';
+
+					}
+					
+					if(divid==2){
+						document.getElementById("divcat"+(parseInt(divid)+1)).innerHTML ='<select name="cat_'+(parseInt(divid)+1)+'" id="cat_'+(parseInt(divid)+1)+'" onchange="setlocation1(this.value)"><option value="">Please Select</option></select>';
+
+					}
+
+					document.getElementById("divcat"+divid).innerHTML=catoptions;										
+
+				
+					if(jsonResponse.url != null)
+
+					{
+
+						document.frmcat.action = jsonResponse.url;
+
+					}
+
+                
+                },
+
+                // Seriallizing the form input values
+
+        	}
+
+        );
+	
+
+}
+
+function setlocation1(catid)
+
+{
+
+	var request = new Ajax.Request(
+
+			'<?php echo $this->getUrl("category/category/viewcaturl") ?>',
+
+           	{
+
+            	method: 'post',
+
+				parameters: {cid:catid},
+
+				onLoading:function(){ document.getElementById('loadingmask').style.display='block'; },		
+
+				onComplete: function(transport){ 
+
+					document.getElementById('loadingmask').style.display='none'; 	
+
+                	var jsonResponse=eval('(' + transport.responseText+')');
+
+					
+
+					if(jsonResponse.parentid != null){
+
+						var catlist=new Array();
+
+						if(document.getElementById('selectcatlist').value!='')
+
+						{
+
+							catlist=document.getElementById('selectcatlist').value.split(",");
+
+							if(document.getElementById('selectcatlist').value.indexOf(jsonResponse.parentid)==-1)
+
+							{
+
+								catlist[2]=jsonResponse.parentid;
+
+							}
+
+							if(document.getElementById('selectcatlist').value.indexOf(document.getElementById('cat_3').value)==-1)
+
+							{
+
+								catlist[3]=document.getElementById('cat_3').value;
+
+							}
+
+							document.getElementById('selectcatlist').value=catlist.join(",");
+
+						}
+
+					}
+
+					
+					if(jsonResponse.url != null)
+
+					{
+
+						document.getElementById("searchbtn").setAttribute('disabled',false);
+
+						document.getElementById("searchbtn").setAttribute('class','leftcatesearch');
+
+						document.getElementById("searchbtn").disabled = false;
+
+						document.frmcat.action = jsonResponse.url;
+
+					}
+
+					else
+
+					{
+
+						document.getElementById("searchbtn").setAttribute('class','leftcatesearch1');
+
+						document.getElementById("searchbtn").setAttribute('disabled', true);
+
+					}
+
+				}
+
+			});
+
+}
+
+function setlocation2(catid)
+
+{
+	
+	var request = new Ajax.Request(
+
+			'<?php echo $this->getUrl("category/category/viewcaturl") ?>',
+
+           	{
+
+            	method: 'post',
+
+				parameters: {cid:catid},
+
+				onLoading:function(){ document.getElementById('loadingmask').style.display='block'; },		
+
+				onComplete: function(transport){ 
+
+					document.getElementById('loadingmask').style.display='none'; 	
+
+                	var jsonResponse=eval('(' + transport.responseText+')');
+
+					
+
+					if(jsonResponse.parentid != null){
+
+						var catlist=new Array();
+
+						if(document.getElementById('selectcatlist').value!='')
+
+						{
+
+							catlist=document.getElementById('selectcatlist').value.split(",");
+
+							if(document.getElementById('selectcatlist').value.indexOf(jsonResponse.parentid)==-1)
+
+							{
+
+								catlist[2]=jsonResponse.parentid;
+
+							}
+
+							if(document.getElementById('selectcatlist').value.indexOf(document.getElementById('cat_2').value)==-1)
+
+							{
+
+								catlist[2]=document.getElementById('cat_2').value;
+
+							}
+
+							document.getElementById('selectcatlist').value=catlist.join(",");
+
+						}
+
+					}
+
+					
+					if(jsonResponse.url != null)
+
+					{
+
+						document.getElementById("searchbtn").setAttribute('disabled',false);
+
+						document.getElementById("searchbtn").setAttribute('class','leftcatesearch');
+
+						document.getElementById("searchbtn").disabled = false;
+
+						document.frmcat.action = jsonResponse.url;
+
+					}
+
+					else
+
+					{
+
+						document.getElementById("searchbtn").setAttribute('class','leftcatesearch1');
+						document.getElementById("searchbtn").setAttribute('disabled', true);
+
+					}
+
+				}
+
+			});
+	}
+	
+</script>
