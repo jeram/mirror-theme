@@ -26,10 +26,9 @@
 ?>
 
         <?php //echo $this->getChildHtml() ?>
-       <div id="footer">
+    <div id="footer">
      <div class="footerinner">
-        <ul>
-          <p>
+         
               <a href="<?php echo Mage::getBaseurl(); ?>">Home</a> |   
              <a href="<?php echo $this->getUrl('about-us');?>">About us</a> |   
               <a href="<?php echo $this->getUrl('customer-service');?>">Services</a> |   
@@ -38,16 +37,12 @@
               <a href="<?php echo $this->getUrl('delivery');?>">Delivery</a> |   
               <a href="<?php echo Mage::getBaseurl().'catalog/seo_sitemap/category' ?>">Sitemap</a> |   
               <a href="<?php echo Mage::getBaseurl().'rss' ?>">RSS</a> |   
-              <a target="_blank" href="https://plus.google.com/108057400564526415372/"  rel="publisher">Find us on Google+</a> |  
-              <a target="_blank" href="https://twitter.com/wing_mirror"  rel="publisher">Twitter</a> |   			  
+              <a onclick="window.open(this.href); return false;" href='https://plus.google.com/105454901548756619275' rel='author'>Find us on Google+</a>			  |
+              <a onclick="window.open(this.href); return false;" href="https://twitter.com/wing_mirror"  rel="publisher">Twitter</a> |   			  
               <a href="<?php echo $this->getUrl('contacts');?>">Contact us </a>
               <br />
               <br />
-             <?php echo $this->getCopyright() ?>
-          </p>
-        </ul>
+            <?php echo $this->getCopyright() ?>
      </div>
     </div>
         
-    </div>
-</div>
