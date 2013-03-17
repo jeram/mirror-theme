@@ -30,7 +30,7 @@ if(!empty($_REQUEST['selectcatlist'])){
     <div class="catselection">
     
     <div style="display:inline-block">
-		<?php echo "<img src=".$this->getSkinURL("images/selection1.png")."  alt='replacement wing mirror' title='wing mirror' height='60' width='60'>"; ?>
+		<?php echo "<img src='".$this->getSkinURL("images/selection1.png")."'  alt='replacement wing mirror' title='wing mirror' height='60' width='60'>"; ?>
     </div>
   					
             <div id="divcat1" style="display:inline-block">
@@ -53,7 +53,7 @@ if(!empty($_REQUEST['selectcatlist'])){
             </div>
             
     <div style="display:inline-block">
-	    <?php echo "<img src=".$this->getSkinURL("images/selection2.png")." alt='replacement wing mirror' title='wing mirror' height='60' width='60'>"; ?>
+	    <?php echo "<img src='".$this->getSkinURL("images/selection2.png")."' alt='replacement wing mirror' title='wing mirror' height='60' width='60'>"; ?>
     </div>
             <div id="divcat2" style="display:inline-block">
                 <select name="cat_2" id="cat_2" onchange="setlocation(this.value,'3');setlocation2(this.value);">
@@ -76,7 +76,7 @@ if(!empty($_REQUEST['selectcatlist'])){
             </div>
             
     <div style="display:inline-block">
-	    <?php echo "<img src=".$this->getSkinURL("images/selection3.png")." alt='cheap wing mirror' title='wing mirror' height='60' width='60'>"; ?>
+	    <?php echo "<img src='".$this->getSkinURL("images/selection3.png")."' alt='cheap wing mirror' title='wing mirror' height='60' width='60'>"; ?>
     </div>
             <div id="divcat3" style="display:inline-block">
                 <select name="cat_3" id="cat_3" <?php if(!empty($aSelectCat)) { ?> onchange="setlocation1(this.value)" <?php } ?>>
