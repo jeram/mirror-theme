@@ -45,17 +45,22 @@
             <input type="hidden" name="related_product" id="related-products-field" value="" />
         </div>
 
-        <div class="product-shop">
+        <div class="product-shop" itemscope itemtype="http://data-vocabulary.org/Product">
             <div class="product-name">
-                <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+                <h1 itemprop="name"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+				 <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
             </div>
 
            
-            
+            <?php if ($this->canEmailToFriend()): ?>
+                <p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a>
+                </p><?php echo $this->__('&nbsp; | &nbsp;') ?>
+            <?php endif; ?>
+			
             <?php echo $this->getChildHtml('alert_urls') ?>
-            <?php echo $this->getChildHtml('product_type_data') ?>
-            <?php echo $this->getTierPriceHtml() ?>
-            <?php echo $this->getChildHtml('extrahint') ?>
+            <?php echo $this->getChildHtml('product_type_data') ?>  
+			<?php echo $this->getTierPriceHtml() ?>
+            <?php echo $this->getChildHtml('extrahint') ?> 
 
             <?php if (!$this->hasOptions()):?>
                 <div class="add-to-box">
@@ -74,28 +79,25 @@
             <?php endif; ?>
             
             
-             <?php if ($this->canEmailToFriend()): ?>
-                <p class="email-friend"><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>"><?php echo $this->__('Email to a Friend') ?></a>
-                </p><?php echo $this->__('&nbsp; | &nbsp;') ?>
-            <?php endif; ?>
+            
 
-            <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
-           <br />		   			<div id="plusone-div" class="plusone"></div>			<script type="text/javascript">				  gapi.plusone.render('plusone-div',{"size": "small", "count": "true"});			</script>
-            <!-- AddThis Button BEGIN -->
-            <div class="addthis_toolbox addthis_default_style ">
-			<a class="addthis_button_preferred_1"></a>
-			<a class="addthis_button_preferred_2"></a>
-			<a class="addthis_button_preferred_3"></a>
-			<a class="addthis_button_preferred_4"></a>
-			<a class="addthis_button_compact"></a>
-			<a class="addthis_counter addthis_bubble_style"></a>
-			
-			</div> 
-			<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e71c85d21e9d3c1"></script>
-			<!-- AddThis Button END -->
+           
+           
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium" data-annotation="none"></div>
 
+			<!-- Place this tag after the last +1 button tag. -->
+			<script type="text/javascript">
+			  window.___gcfg = {lang: 'en-GB'};
 
-			<!-- Place this render call where appropriate -->
+			  (function() {
+				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+				po.src = 'https://apis.google.com/js/plusone.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+			  })();
+			</script>		   
+		   
+		    <!-- Place this render call where appropriate -->
 			<script type="text/javascript">
 			  (function() {
 				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -103,6 +105,18 @@
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 			  })();
 			</script>
+						
+			<div id="fb-root"></div>
+			<script>(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) return;
+			  js = d.createElement(s); js.id = id;
+			  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=552305228143042";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));</script>
+
+			<br/>
+			<div class="fb-like" data-href="http://www.facebook.com/wingmirrormarket" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false"></div>
 
             <?php if ($_product->getShortDescription()):?>
                 <div class="short-description">
