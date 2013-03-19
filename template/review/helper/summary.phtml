@@ -25,7 +25,7 @@
  */
 ?>
 <?php if ($this->getReviewsCount()): ?>
-    <div class="ratings">
+    <div class="ratings" itemprop="review" itemscope itemtype="http://data-vocabulary.org/Review-aggregate">
         <?php if ($this->getRatingSummary()):?>
             <div class="rating-box">
                 <div class="rating" style="width:<?php echo $this->getRatingSummary() ?>%"></div>
